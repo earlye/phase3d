@@ -53,12 +53,33 @@ namespace phase3d
     };
 
     template<typename STORAGE, typename SCALAR>
-    rgb<STORAGE> operator*(SCALAR k, rgb<STORAGE> a)
+    rgb<STORAGE> operator*(SCALAR k, rgb<STORAGE> const& a)
     { return rgb<STORAGE>(k*a.red(),k*a.green(),k*a.blue()); }
 
     template<typename STORAGE, typename SCALAR>
-    rgb<STORAGE> operator*(rgb<STORAGE> a,SCALAR k)
+    rgb<STORAGE> operator*(rgb<STORAGE> const& a,SCALAR k)
     { return rgb<STORAGE>(k*a.red(),k*a.green(),k*a.blue()); }
+
+    template<typename STORAGE, typename SCALAR>
+    rgb<STORAGE> operator/(rgb<STORAGE> const& a,SCALAR k)
+    { return rgb<STORAGE>(a.red()/k,a.green()/k,a.blue()/k); }
+
+    template<typename STORAGE>
+    rgb<STORAGE> operator+(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
+    { return rgb<STORAGE>(a.red()+b.red(),a.green()+b.green(),a.blue()+b.blue()); }
+
+    template<typename STORAGE>
+    rgb<STORAGE> operator-(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
+    { return rgb<STORAGE>(a.red()-b.red(),a.green()-b.green(),a.blue()-b.blue()); }
+
+    template<typename STORAGE>
+    rgb<STORAGE> operator*(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
+    { return rgb<STORAGE>(a.red()*b.red(),a.green()*b.green(),a.blue()*b.blue()); }
+
+    template<typename STORAGE>
+    rgb<STORAGE> operator/(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
+    { return rgb<STORAGE>(a.red()/b.red(),a.green()/b.green(),a.blue()/b.blue()); }
+
   }
 }
 
