@@ -65,13 +65,3 @@ void test_scalar_multiplication()
   assert(rgbdbl.blue() == 4.0);
 }
 
-int main(int argc, char** argv )
-{
-  test_rgb_default_ctor();
-  test_rgb_color_ctor();
-  test_setters();
-  test_unary_negative();
-  test_scalar_multiplication();
-
-  std::cout << "all tests passed" << std::endl;
-}
