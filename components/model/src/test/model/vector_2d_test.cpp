@@ -60,3 +60,13 @@ void test_v2d_add()
   if ( result.data[0] != 2 ) throw std::runtime_error( "expected result[0] == 2" );
   if ( result.data[1] != 3 ) throw std::runtime_error( "expected result[1] == 3" );
 }
+
+void test_v2d_dot_product()
+{
+  double_vector_2d v2d_1(2,3);
+  double_vector_2d v2d_2(4,6);
+
+  double dot = v2d_1.dot_product(v2d_2);
+
+  if ( dot != (2*4 + 3*6) ) throw std::runtime_error( "dot product is busted" );
+}

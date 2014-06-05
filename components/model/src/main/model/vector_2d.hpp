@@ -22,6 +22,17 @@ namespace phase3d
 	data[1] = y;
       }
 
+      bool operator==(this_type const& other) const
+      {
+	return data[0] == other.data[0]
+	  && data[1] == other.data[1];
+      }
+
+      bool operator!=(this_type const& other) const
+      {
+	return !(operator==(other));
+      }
+
       storage length() const
       {
 	return std::sqrt(length_squared());
@@ -54,6 +65,12 @@ namespace phase3d
       this_type operator-(vector_2d<OTHER_STORAGE> const& other )
       {
 	return this_type(data[0] - other.data[0], data[1] - other.data[1]);
+      }
+
+      template< typename OTHER_STORAGE >
+      storage dot_product(vector_2d<OTHER_STORAGE> const& other )
+      {
+	return data[0]*other.data[0] + data[1] * other.data[1];
       }
 
     private:
