@@ -17,9 +17,9 @@ void test_v3d_unary_negation()
 
   v3d = -v3d;
 
-  if ( v3d.data[0] != -1 ) throw std::runtime_error( "expected v3d[0] == -1" );
-  if ( v3d.data[1] != -2 ) throw std::runtime_error( "expected v3d[1] == -2" );
-  if ( v3d.data[2] != -3 ) throw std::runtime_error( "expected v3d[1] == -3" );
+  if ( v3d.data_[0] != -1 ) throw std::runtime_error( "expected v3d[0] == -1" );
+  if ( v3d.data_[1] != -2 ) throw std::runtime_error( "expected v3d[1] == -2" );
+  if ( v3d.data_[2] != -3 ) throw std::runtime_error( "expected v3d[1] == -3" );
 }
 
 void test_v3d_scalar_multiply()
@@ -28,15 +28,15 @@ void test_v3d_scalar_multiply()
 
   v3d = 2 * v3d;
 
-  if ( v3d.data[0] != 2 ) throw std::runtime_error( "expected v3d[0] == 2" );
-  if ( v3d.data[1] != 4 ) throw std::runtime_error( "expected v3d[1] == 4" );
-  if ( v3d.data[2] != 6 ) throw std::runtime_error( "expected v3d[2] == 6" );
+  if ( v3d.data_[0] != 2 ) throw std::runtime_error( "expected v3d[0] == 2" );
+  if ( v3d.data_[1] != 4 ) throw std::runtime_error( "expected v3d[1] == 4" );
+  if ( v3d.data_[2] != 6 ) throw std::runtime_error( "expected v3d[2] == 6" );
   
   v3d = v3d * 2;
 
-  if ( v3d.data[0] != 4 ) throw std::runtime_error( "expected v3d[0] == 4" );
-  if ( v3d.data[1] != 8 ) throw std::runtime_error( "expected v3d[1] == 8" );
-  if ( v3d.data[2] != 12 ) throw std::runtime_error( "expected v3d[2] == 12" );
+  if ( v3d.data_[0] != 4 ) throw std::runtime_error( "expected v3d[0] == 4" );
+  if ( v3d.data_[1] != 8 ) throw std::runtime_error( "expected v3d[1] == 8" );
+  if ( v3d.data_[2] != 12 ) throw std::runtime_error( "expected v3d[2] == 12" );
 }
 
 void test_v3d_scalar_divide()
@@ -45,9 +45,9 @@ void test_v3d_scalar_divide()
 
   v3d = v3d / 2;
 
-  if ( v3d.data[0] != 2 ) throw std::runtime_error( "expected v3d[0] == 2" );
-  if ( v3d.data[1] != 4 ) throw std::runtime_error( "expected v3d[1] == 4" );
-  if ( v3d.data[2] != 6 ) throw std::runtime_error( "expected v3d[2] == 6" );
+  if ( v3d.data_[0] != 2 ) throw std::runtime_error( "expected v3d[0] == 2" );
+  if ( v3d.data_[1] != 4 ) throw std::runtime_error( "expected v3d[1] == 4" );
+  if ( v3d.data_[2] != 6 ) throw std::runtime_error( "expected v3d[2] == 6" );
 }
 
 void test_v3d_add()
@@ -57,15 +57,15 @@ void test_v3d_add()
 
   double_vector_3d result = v3d_1 + v3d_2;
 
-  if ( result.data[0] != 6 ) throw std::runtime_error( "expected result[0] == 6" );
-  if ( result.data[1] != 9 ) throw std::runtime_error( "expected result[1] == 9" );
-  if ( result.data[2] != 12 ) throw std::runtime_error( "expected result[2] == 12" );
+  if ( result.data_[0] != 6 ) throw std::runtime_error( "expected result[0] == 6" );
+  if ( result.data_[1] != 9 ) throw std::runtime_error( "expected result[1] == 9" );
+  if ( result.data_[2] != 12 ) throw std::runtime_error( "expected result[2] == 12" );
 
   result = v3d_2 - v3d_1;
 
-  if ( result.data[0] != 2 ) throw std::runtime_error( "expected result[0] == 2" );
-  if ( result.data[1] != 3 ) throw std::runtime_error( "expected result[1] == 3" );
-  if ( result.data[2] != 4 ) throw std::runtime_error( "expected result[1] == 4" );
+  if ( result.data_[0] != 2 ) throw std::runtime_error( "expected result[0] == 2" );
+  if ( result.data_[1] != 3 ) throw std::runtime_error( "expected result[1] == 3" );
+  if ( result.data_[2] != 4 ) throw std::runtime_error( "expected result[1] == 4" );
 }
 
 void test_v3d_dot_product()

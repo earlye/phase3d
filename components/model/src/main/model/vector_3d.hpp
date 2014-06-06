@@ -14,13 +14,13 @@ namespace phase3d
       typedef STORAGE storage;
       typedef vector_3d<storage> this_type;
 
-      storage data[3] = {0,0,0};
+      storage data_[3] = {0,0,0};
 
-      vector_3d( storage x , storage y , storage z )
+      vector_3d( storage x = 0 , storage y = 0 , storage z = 0 )
       {
-	data[0] = x;
-	data[1] = y;
-	data[2] = z;
+	data_[0] = x;
+	data_[1] = y;
+	data_[2] = z;
       }
 
       storage length() const
@@ -30,14 +30,14 @@ namespace phase3d
 
       this_type operator-() const
       {
-	return this_type(-data[0],-data[1],-data[2]);
+	return this_type(-data_[0],-data_[1],-data_[2]);
       }
 
       bool operator==(this_type const& other) const
       {
-	return data[0] == other.data[0]
-	  && data[1] == other.data[1]
-	  && data[2] == other.data[2];
+	return data_[0] == other.data_[0]
+	  && data_[1] == other.data_[1]
+	  && data_[2] == other.data_[2];
       }
 
       bool operator!=(this_type const& other) const
@@ -49,52 +49,52 @@ namespace phase3d
       template< typename SCALAR >
       this_type operator*( SCALAR other )
       {
-	return this_type(data[0]*other,data[1]*other,data[2]*other);
+	return this_type(data_[0]*other,data_[1]*other,data_[2]*other);
       }
 
       template< typename SCALAR >
       this_type operator/( SCALAR other )
       {
-	return this_type(data[0]/other,data[1]/other,data[2]/other);
+	return this_type(data_[0]/other,data_[1]/other,data_[2]/other);
       }
 
       template< typename OTHER_STORAGE >
       this_type operator+(vector_3d<OTHER_STORAGE> const& other )
       {
-	return this_type(data[0] + other.data[0], data[1] + other.data[1],data[2]+other.data[2]);
+	return this_type(data_[0] + other.data_[0], data_[1] + other.data_[1],data_[2]+other.data_[2]);
       }
 
       template< typename OTHER_STORAGE >
       this_type operator-(vector_3d<OTHER_STORAGE> const& other )
       {
-	return this_type(data[0] - other.data[0], data[1] - other.data[1],data[2]-other.data[2]);
+	return this_type(data_[0] - other.data_[0], data_[1] - other.data_[1],data_[2]-other.data_[2]);
       }
 
       template< typename OTHER_STORAGE >
       storage dot_product(vector_3d<OTHER_STORAGE> const& other )
       {
-	return data[0]*other.data[0] + data[1] * other.data[1] + data[2]*other.data[2];
+	return data_[0]*other.data_[0] + data_[1] * other.data_[1] + data_[2]*other.data_[2];
       }
 
       template< typename OTHER_STORAGE >
       this_type cross_product(vector_3d<OTHER_STORAGE> const& other )
       {
-	return this_type( data[1]*other.data[2] - data[2]*other.data[1],
-			  data[2]*other.data[0] - data[0]*other.data[2],
-			  data[0]*other.data[1] - data[1]*other.data[0] );
+	return this_type( data_[1]*other.data_[2] - data_[2]*other.data_[1],
+			  data_[2]*other.data_[0] - data_[0]*other.data_[2],
+			  data_[0]*other.data_[1] - data_[1]*other.data_[0] );
       }
 
     private:
       storage length_squared() const
       {
-	return data[0]*data[0] + data[1]*data[1] + data[2]*data[2];
+	return data_[0]*data_[0] + data_[1]*data_[1] + data_[2]*data_[2];
       }
     };
 
     template< typename SCALAR , typename STORAGE >
     vector_3d<STORAGE> operator*( SCALAR const scalar, vector_3d<STORAGE> const& vec )
     {
-      return vector_3d<STORAGE>(scalar * vec.data[0], scalar * vec.data[1], scalar * vec.data[2]);
+      return vector_3d<STORAGE>(scalar * vec.data_[0], scalar * vec.data_[1], scalar * vec.data_[2]);
     }
   }
 }
