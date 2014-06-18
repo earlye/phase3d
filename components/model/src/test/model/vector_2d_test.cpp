@@ -1,4 +1,7 @@
 #include <model/vector_2d.hpp>
+
+#include <libede/ASSERT_EQUAL.hpp>
+
 #include <stdexcept>
 
 typedef phase3d::model::vector_2d<double> double_vector_2d;
@@ -7,7 +10,7 @@ void test_v2d_length()
 {
   double_vector_2d v2d(3,4);
 
-  if (v2d.length() != 5) throw std::runtime_error( "expected v2d.length() == 5" );
+  ASSERT_EQUAL(v2d.length() , 5);
 }
 
 void test_v2d_unary_negation()
@@ -16,8 +19,8 @@ void test_v2d_unary_negation()
 
   v2d = -v2d;
 
-  if ( v2d.data[0] != -1 ) throw std::runtime_error( "expected v2d[0] == -1" );
-  if ( v2d.data[1] != -2 ) throw std::runtime_error( "expected v2d[1] == -2" );
+  ASSERT_EQUAL( v2d.data[0] , -1 );
+  ASSERT_EQUAL( v2d.data[1] , -2 );
 }
 
 void test_v2d_scalar_multiply()
@@ -26,13 +29,13 @@ void test_v2d_scalar_multiply()
 
   v2d = 2 * v2d;
 
-  if ( v2d.data[0] != 2 ) throw std::runtime_error( "expected v2d[0] == 2" );
-  if ( v2d.data[1] != 4 ) throw std::runtime_error( "expected v2d[1] == 4" );
+  ASSERT_EQUAL( v2d.data[0] , 2 );
+  ASSERT_EQUAL( v2d.data[1] , 4 );
   
   v2d = v2d * 2;
 
-  if ( v2d.data[0] != 4 ) throw std::runtime_error( "expected v2d[0] == 4" );
-  if ( v2d.data[1] != 8 ) throw std::runtime_error( "expected v2d[1] == 8" );
+  ASSERT_EQUAL( v2d.data[0] , 4 );
+  ASSERT_EQUAL( v2d.data[1] , 8 );
 }
 
 void test_v2d_scalar_divide()
@@ -41,8 +44,8 @@ void test_v2d_scalar_divide()
 
   v2d = v2d / 2;
 
-  if ( v2d.data[0] != 2 ) throw std::runtime_error( "expected v2d[0] == 2" );
-  if ( v2d.data[1] != 4 ) throw std::runtime_error( "expected v2d[1] == 4" );
+  ASSERT_EQUAL( v2d.data[0] , 2 );
+  ASSERT_EQUAL( v2d.data[1] , 4 );
 }
 
 void test_v2d_add()
@@ -52,13 +55,13 @@ void test_v2d_add()
 
   double_vector_2d result = v2d_1 + v2d_2;
 
-  if ( result.data[0] != 6 ) throw std::runtime_error( "expected result[0] == 6" );
-  if ( result.data[1] != 9 ) throw std::runtime_error( "expected result[1] == 9" );
+  ASSERT_EQUAL( result.data[0] , 6 );
+  ASSERT_EQUAL( result.data[1] , 9 );
 
   result = v2d_2 - v2d_1;
 
-  if ( result.data[0] != 2 ) throw std::runtime_error( "expected result[0] == 2" );
-  if ( result.data[1] != 3 ) throw std::runtime_error( "expected result[1] == 3" );
+  ASSERT_EQUAL( result.data[0] , 2 );
+  ASSERT_EQUAL( result.data[1] , 3 );
 }
 
 void test_v2d_dot_product()
@@ -68,5 +71,5 @@ void test_v2d_dot_product()
 
   double dot = v2d_1.dot_product(v2d_2);
 
-  if ( dot != (2*4 + 3*6) ) throw std::runtime_error( "dot product is busted" );
+  ASSERT_EQUAL( dot , (2*4 + 3*6) );
 }

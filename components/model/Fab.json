@@ -1,4 +1,4 @@
 { "target" : "model.p3d" , 
   "type" : "shared",
-  "cxxflags" : [ "-std=c++11" , "-g" , "-Isrc/main" ],
+  "cxxflags" : [ "-std=c++11" , "-g" , "-Isrc/main" , "-I../../lib" ],
   "lflags" : ["-v"] }

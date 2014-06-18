@@ -47,41 +47,46 @@ namespace phase3d
 
 
       template< typename SCALAR >
-      this_type operator*( SCALAR other )
+      this_type operator*( SCALAR other ) const
       {
 	return this_type(data_[0]*other,data_[1]*other,data_[2]*other);
       }
 
       template< typename SCALAR >
-      this_type operator/( SCALAR other )
+      this_type operator/( SCALAR other ) const
       {
 	return this_type(data_[0]/other,data_[1]/other,data_[2]/other);
       }
 
       template< typename OTHER_STORAGE >
-      this_type operator+(vector_3d<OTHER_STORAGE> const& other )
+      this_type operator+(vector_3d<OTHER_STORAGE> const& other ) const
       {
 	return this_type(data_[0] + other.data_[0], data_[1] + other.data_[1],data_[2]+other.data_[2]);
       }
 
       template< typename OTHER_STORAGE >
-      this_type operator-(vector_3d<OTHER_STORAGE> const& other )
+      this_type operator-(vector_3d<OTHER_STORAGE> const& other ) const
       {
 	return this_type(data_[0] - other.data_[0], data_[1] - other.data_[1],data_[2]-other.data_[2]);
       }
 
       template< typename OTHER_STORAGE >
-      storage dot_product(vector_3d<OTHER_STORAGE> const& other )
+      storage dot_product(vector_3d<OTHER_STORAGE> const& other ) const
       {
 	return data_[0]*other.data_[0] + data_[1] * other.data_[1] + data_[2]*other.data_[2];
       }
 
       template< typename OTHER_STORAGE >
-      this_type cross_product(vector_3d<OTHER_STORAGE> const& other )
+      this_type cross_product(vector_3d<OTHER_STORAGE> const& other ) const
       {
 	return this_type( data_[1]*other.data_[2] - data_[2]*other.data_[1],
 			  data_[2]*other.data_[0] - data_[0]*other.data_[2],
 			  data_[0]*other.data_[1] - data_[1]*other.data_[0] );
+      }
+
+      this_type normalize() const
+      {
+	return *this / length();
       }
 
     private:
@@ -95,6 +100,12 @@ namespace phase3d
     vector_3d<STORAGE> operator*( SCALAR const scalar, vector_3d<STORAGE> const& vec )
     {
       return vector_3d<STORAGE>(scalar * vec.data_[0], scalar * vec.data_[1], scalar * vec.data_[2]);
+    }
+
+    template< typename STREAM_TYPE , typename STORAGE >
+    STREAM_TYPE& operator<<( STREAM_TYPE& stream , vector_3d<STORAGE> const& vec )
+    {
+      return stream << '(' << vec.data_[0] << ',' << vec.data_[1] << ',' << vec.data_[2] << ')';
     }
   }
 }

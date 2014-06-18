@@ -1,5 +1,8 @@
 #include <model/interval.hpp>
-#include <stdexcept>
+
+#include <libede/ASSERT_EQUAL.hpp>
+#include <libede/ASSERT_FALSE.hpp>
+#include <libede/ASSERT_TRUE.hpp>
 
 namespace test_interval
 {
@@ -7,30 +10,43 @@ namespace test_interval
 
   void test_ctor()
   {
-    dbl_interval test(0,1);
+    dbl_interval test(0,2);    
 
-    if (test.low() != 0) throw std::runtime_error( "test.low() should be 0");
-    if (test.high() != 1) throw std::runtime_error( "test.high() should be 1");
+    ASSERT_EQUAL(test.low(),0);
+    ASSERT_EQUAL(test.high(),2);
   }
+
+  void test_stream()
+  {
+    dbl_interval value(0,2);
+    std::stringstream check;
+    check << value;
+    ASSERT_EQUAL(check.str(),"[0 .. 2]");
+  }
+
 
   void test_empty()
   {
-    if (dbl_interval(0,1).empty()) throw std::runtime_error( "interval [0,1] should not be empty." );
-    if (!dbl_interval(1,0).empty()) throw std::runtime_error( "interval [1,0] should be empty." );
+    ASSERT_FALSE(dbl_interval(0,1).empty());
+    ASSERT_TRUE(dbl_interval(1,0).empty());
   }
 
   void test_equal()
   {
-    if (!(dbl_interval(0,1) == dbl_interval(0,1))) throw std::runtime_error( "[0,1] should == [0,1]" );
-    if (dbl_interval(0,1) == dbl_interval(1,2)) throw std::runtime_error( "[0,1] should not == [1,2]" );
-    if (!(dbl_interval(1,0) == dbl_interval(2,1))) throw std::runtime_error( "[1,0] should == [2,1]" );
+    // testing operator== - don't use ASSERT_EQUAL
+    ASSERT_TRUE(dbl_interval(0,1) == dbl_interval(0,1));
+    ASSERT_FALSE(dbl_interval(0,1) == dbl_interval(1,2));
+    ASSERT_TRUE(dbl_interval(1,0) == dbl_interval(2,1));
+    ASSERT_TRUE(dbl_interval(1,0) == dbl_interval(2,0)); // empty intervals are equal, even if they're empty for different reasons.
   }
 
   void test_unequal()
   {
-    if (dbl_interval(0,1) != dbl_interval(0,1)) throw std::runtime_error( "[0,1] should == [0,1]" );
-    if (!(dbl_interval(0,1) != dbl_interval(1,2))) throw std::runtime_error( "[0,1] should not == [1,2]" );
-    if (dbl_interval(1,0) != dbl_interval(2,1)) throw std::runtime_error( "[1,0] should == [2,1]" );
+    // testing operator!= - don't use ASSERT_EQUAL
+    ASSERT_FALSE(dbl_interval(0,1) != dbl_interval(0,1));
+    ASSERT_TRUE(dbl_interval(0,1) != dbl_interval(1,2));
+    ASSERT_FALSE(dbl_interval(1,0) != dbl_interval(2,1));
+    ASSERT_FALSE(dbl_interval(1,0) != dbl_interval(2,0)); // empty intervals are equal, even if they're empty for different reasons.
   }
 
   void test_intersect()
@@ -39,10 +55,12 @@ namespace test_interval
     dbl_interval b(2,7);
     dbl_interval c = a.intersect(b);
     dbl_interval d = b.intersect(a);
+    dbl_interval e = b.intersect(dbl_interval(0,1));
 
     dbl_interval expected(2,3);
 
-    if (!(c==expected)) throw std::runtime_error("intersect broken");
-    if (!(d==expected)) throw std::runtime_error("intersect broken");
+    ASSERT_EQUAL(c,expected);
+    ASSERT_EQUAL(d,expected);
+    ASSERT_TRUE(e.empty());
   }
 }
