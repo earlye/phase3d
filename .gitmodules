@@ -1,0 +1,3 @@
+[submodule "lib/libede"]
+	path = lib/libede
+	url = https://github.com/earlye/libede.git
