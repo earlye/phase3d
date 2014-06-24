@@ -5,15 +5,15 @@ namespace phase3d
 {
   namespace model
   {
-    template< typename STORAGE >
+    template< typename SCALAR >
     class rgb
     {
     private:
-      typedef STORAGE storage;
+      typedef SCALAR scalar;
 
-      storage red_;
-      storage green_;
-      storage blue_;
+      scalar red_;
+      scalar green_;
+      scalar blue_;
 
     public:
       rgb( )
@@ -22,28 +22,28 @@ namespace phase3d
 	, blue_(0)
       { }
 
-      rgb( storage red, storage green, storage blue )
+      rgb( scalar red, scalar green, scalar blue )
 	: red_(red)
 	, green_(green)
 	, blue_(blue)
       { }
 
-      storage red() const
+      scalar red() const
       { return red_; }
 
-      storage green() const
+      scalar green() const
       { return green_; }
 
-      storage blue() const
+      scalar blue() const
       { return blue_; }
 
-      rgb& red( storage value )
+      rgb& red( scalar value )
       { red_ = value; return *this; }
 
-      rgb& green( storage value )
+      rgb& green( scalar value )
       { green_ = value; return *this; }
 
-      rgb& blue( storage value )
+      rgb& blue( scalar value )
       { blue_ = value; return *this; }
 
       rgb operator-() const
@@ -52,33 +52,33 @@ namespace phase3d
       }      
     };
 
-    template<typename STORAGE, typename SCALAR>
-    rgb<STORAGE> operator*(SCALAR k, rgb<STORAGE> const& a)
-    { return rgb<STORAGE>(k*a.red(),k*a.green(),k*a.blue()); }
+    template<typename SCALAR>
+    rgb<SCALAR> operator*(SCALAR k, rgb<SCALAR> const& a)
+    { return rgb<SCALAR>(k*a.red(),k*a.green(),k*a.blue()); }
 
-    template<typename STORAGE, typename SCALAR>
-    rgb<STORAGE> operator*(rgb<STORAGE> const& a,SCALAR k)
-    { return rgb<STORAGE>(k*a.red(),k*a.green(),k*a.blue()); }
+    template<typename SCALAR>
+    rgb<SCALAR> operator*(rgb<SCALAR> const& a,SCALAR k)
+    { return rgb<SCALAR>(k*a.red(),k*a.green(),k*a.blue()); }
 
-    template<typename STORAGE, typename SCALAR>
-    rgb<STORAGE> operator/(rgb<STORAGE> const& a,SCALAR k)
-    { return rgb<STORAGE>(a.red()/k,a.green()/k,a.blue()/k); }
+    template<typename SCALAR>
+    rgb<SCALAR> operator/(rgb<SCALAR> const& a,SCALAR k)
+    { return rgb<SCALAR>(a.red()/k,a.green()/k,a.blue()/k); }
 
-    template<typename STORAGE>
-    rgb<STORAGE> operator+(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
-    { return rgb<STORAGE>(a.red()+b.red(),a.green()+b.green(),a.blue()+b.blue()); }
+    template<typename SCALAR>
+    rgb<SCALAR> operator+(rgb<SCALAR> const& a, rgb<SCALAR> const& b )
+    { return rgb<SCALAR>(a.red()+b.red(),a.green()+b.green(),a.blue()+b.blue()); }
 
-    template<typename STORAGE>
-    rgb<STORAGE> operator-(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
-    { return rgb<STORAGE>(a.red()-b.red(),a.green()-b.green(),a.blue()-b.blue()); }
+    template<typename SCALAR>
+    rgb<SCALAR> operator-(rgb<SCALAR> const& a, rgb<SCALAR> const& b )
+    { return rgb<SCALAR>(a.red()-b.red(),a.green()-b.green(),a.blue()-b.blue()); }
 
-    template<typename STORAGE>
-    rgb<STORAGE> operator*(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
-    { return rgb<STORAGE>(a.red()*b.red(),a.green()*b.green(),a.blue()*b.blue()); }
+    template<typename SCALAR>
+    rgb<SCALAR> operator*(rgb<SCALAR> const& a, rgb<SCALAR> const& b )
+    { return rgb<SCALAR>(a.red()*b.red(),a.green()*b.green(),a.blue()*b.blue()); }
 
-    template<typename STORAGE>
-    rgb<STORAGE> operator/(rgb<STORAGE> const& a, rgb<STORAGE> const& b )
-    { return rgb<STORAGE>(a.red()/b.red(),a.green()/b.green(),a.blue()/b.blue()); }
+    template<typename SCALAR>
+    rgb<SCALAR> operator/(rgb<SCALAR> const& a, rgb<SCALAR> const& b )
+    { return rgb<SCALAR>(a.red()/b.red(),a.green()/b.green(),a.blue()/b.blue()); }
 
   }
 }

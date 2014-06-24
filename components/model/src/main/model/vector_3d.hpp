@@ -7,25 +7,44 @@ namespace phase3d
 {
   namespace model
   {
-    template< typename STORAGE >
+    template< typename SCALAR >
     class vector_3d
     {
     public:
-      typedef STORAGE storage;
-      typedef vector_3d<storage> this_type;
+      typedef SCALAR scalar;
+      typedef vector_3d<scalar> this_type;
 
-      storage data_[3] = {0,0,0};
+      scalar data_[3] = {0,0,0};
 
-      vector_3d( storage x = 0 , storage y = 0 , storage z = 0 )
+      static const this_type x_;
+      static const this_type y_;
+      static const this_type z_;
+
+      vector_3d( scalar x = 0 , scalar y = 0 , scalar z = 0 )
       {
 	data_[0] = x;
 	data_[1] = y;
 	data_[2] = z;
       }
 
-      storage length() const
+      scalar length() const
       {
 	return std::sqrt(length_squared());
+      }
+
+      scalar x() const
+      {
+	return data_[0];
+      }
+
+      scalar y() const
+      {
+	return data_[1];
+      }
+
+      scalar z() const
+      {
+	return data_[2];
       }
 
       this_type operator-() const
@@ -46,38 +65,36 @@ namespace phase3d
       }
 
 
-      template< typename SCALAR >
-      this_type operator*( SCALAR other ) const
+      this_type operator*( scalar other ) const
       {
 	return this_type(data_[0]*other,data_[1]*other,data_[2]*other);
       }
 
-      template< typename SCALAR >
-      this_type operator/( SCALAR other ) const
+      this_type operator/( scalar other ) const
       {
 	return this_type(data_[0]/other,data_[1]/other,data_[2]/other);
       }
 
-      template< typename OTHER_STORAGE >
-      this_type operator+(vector_3d<OTHER_STORAGE> const& other ) const
+      template< typename OTHER_SCALAR >
+      this_type operator+(vector_3d<OTHER_SCALAR> const& other ) const
       {
 	return this_type(data_[0] + other.data_[0], data_[1] + other.data_[1],data_[2]+other.data_[2]);
       }
 
-      template< typename OTHER_STORAGE >
-      this_type operator-(vector_3d<OTHER_STORAGE> const& other ) const
+      template< typename OTHER_SCALAR >
+      this_type operator-(vector_3d<OTHER_SCALAR> const& other ) const
       {
 	return this_type(data_[0] - other.data_[0], data_[1] - other.data_[1],data_[2]-other.data_[2]);
       }
 
-      template< typename OTHER_STORAGE >
-      storage dot_product(vector_3d<OTHER_STORAGE> const& other ) const
+      template< typename OTHER_SCALAR >
+      scalar dot_product(vector_3d<OTHER_SCALAR> const& other ) const
       {
 	return data_[0]*other.data_[0] + data_[1] * other.data_[1] + data_[2]*other.data_[2];
       }
 
-      template< typename OTHER_STORAGE >
-      this_type cross_product(vector_3d<OTHER_STORAGE> const& other ) const
+      template< typename OTHER_SCALAR >
+      this_type cross_product(vector_3d<OTHER_SCALAR> const& other ) const
       {
 	return this_type( data_[1]*other.data_[2] - data_[2]*other.data_[1],
 			  data_[2]*other.data_[0] - data_[0]*other.data_[2],
@@ -90,20 +107,29 @@ namespace phase3d
       }
 
     private:
-      storage length_squared() const
+      scalar length_squared() const
       {
 	return data_[0]*data_[0] + data_[1]*data_[1] + data_[2]*data_[2];
       }
     };
 
-    template< typename SCALAR , typename STORAGE >
-    vector_3d<STORAGE> operator*( SCALAR const scalar, vector_3d<STORAGE> const& vec )
+    template< typename SCALAR >
+    const vector_3d<SCALAR> vector_3d<SCALAR>::x_ = vector_3d(1,0,0);
+
+    template< typename SCALAR >
+    const vector_3d<SCALAR> vector_3d<SCALAR>::y_ = vector_3d(0,1,0);
+
+    template< typename SCALAR >
+    const vector_3d<SCALAR> vector_3d<SCALAR>::z_ = vector_3d(0,0,1);
+
+    template< typename OTHER_SCALAR, typename SCALAR >
+    vector_3d<SCALAR> operator*( OTHER_SCALAR const scalar, vector_3d<SCALAR> const& vec )
     {
-      return vector_3d<STORAGE>(scalar * vec.data_[0], scalar * vec.data_[1], scalar * vec.data_[2]);
+      return vector_3d<SCALAR>(scalar * vec.data_[0], scalar * vec.data_[1], scalar * vec.data_[2]);
     }
 
-    template< typename STREAM_TYPE , typename STORAGE >
-    STREAM_TYPE& operator<<( STREAM_TYPE& stream , vector_3d<STORAGE> const& vec )
+    template< typename STREAM_TYPE , typename SCALAR >
+    STREAM_TYPE& operator<<( STREAM_TYPE& stream , vector_3d<SCALAR> const& vec )
     {
       return stream << '(' << vec.data_[0] << ',' << vec.data_[1] << ',' << vec.data_[2] << ')';
     }

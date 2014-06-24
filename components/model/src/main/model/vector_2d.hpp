@@ -7,16 +7,16 @@ namespace phase3d
 {
   namespace model
   {
-    template< typename STORAGE >
+    template< typename SCALAR >
     class vector_2d
     {
     public:
-      typedef STORAGE storage;
-      typedef vector_2d<storage> this_type;
+      typedef SCALAR scalar;
+      typedef vector_2d<scalar> this_type;
 
-      storage data[2] = {0,0};
+      scalar data[2] = {0,0};
 
-      vector_2d( storage x , storage y )
+      vector_2d( scalar x , scalar y )
       {
 	data[0] = x;
 	data[1] = y;
@@ -33,7 +33,7 @@ namespace phase3d
 	return !(operator==(other));
       }
 
-      storage length() const
+      scalar length() const
       {
 	return std::sqrt(length_squared());
       }
@@ -43,47 +43,42 @@ namespace phase3d
 	return this_type(-data[0],-data[1]);
       }
 
-      template< typename SCALAR >
-      this_type operator*( SCALAR other )
+      this_type operator*( scalar other )
       {
 	return this_type(data[0]*other,data[1]*other);
       }
 
-      template< typename SCALAR >
-      this_type operator/( SCALAR other )
+      this_type operator/( scalar other )
       {
 	return this_type(data[0]/other,data[1]/other);
       }
 
-      template< typename OTHER_STORAGE >
-      this_type operator+(vector_2d<OTHER_STORAGE> const& other )
+      this_type operator+(this_type const& other )
       {
 	return this_type(data[0] + other.data[0], data[1] + other.data[1]);
       }
 
-      template< typename OTHER_STORAGE >
-      this_type operator-(vector_2d<OTHER_STORAGE> const& other )
+      this_type operator-(this_type const& other )
       {
 	return this_type(data[0] - other.data[0], data[1] - other.data[1]);
       }
 
-      template< typename OTHER_STORAGE >
-      storage dot_product(vector_2d<OTHER_STORAGE> const& other )
+      scalar dot_product(this_type const& other )
       {
 	return data[0]*other.data[0] + data[1] * other.data[1];
       }
 
     private:
-      storage length_squared() const
+      scalar length_squared() const
       {
 	return data[0]*data[0] + data[1]*data[1];
       }
     };
 
-    template< typename SCALAR , typename STORAGE >
-    vector_2d<STORAGE> operator*( SCALAR const scalar, vector_2d<STORAGE> const& vec )
+    template< typename OTHER_SCALAR, typename SCALAR >
+    vector_2d<SCALAR> operator*( OTHER_SCALAR const scalar, vector_2d<SCALAR> const& vec )
     {
-      return vector_2d<STORAGE>(scalar * vec.data[0], scalar * vec.data[1]);
+      return vector_2d<SCALAR>(scalar * vec.data[0], scalar * vec.data[1]);
     }
   }
 }

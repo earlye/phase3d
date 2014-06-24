@@ -8,13 +8,13 @@ namespace phase3d
   namespace model
   {
 
-    template< typename STORAGE >
+    template< typename SCALAR >
     class ray_3d
     {
     public:
-      typedef STORAGE storage;
-      typedef ray_3d<storage> this_type;
-      typedef vector_3d< storage > v3d;
+      typedef SCALAR scalar;
+      typedef ray_3d<scalar> this_type;
+      typedef vector_3d< scalar > v3d;
 
       
       v3d origin_;
@@ -27,7 +27,7 @@ namespace phase3d
 	, direction_(direction)
       { }
 
-      v3d point_at_parameter( storage t )
+      v3d point_at_parameter( scalar t )
       {
 	return origin_ + t * direction_;
       }
