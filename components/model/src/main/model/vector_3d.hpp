@@ -1,6 +1,8 @@
 #ifndef h521F1744_AC9B_43DC_A29B_CD61A13FBEF3
 #define h521F1744_AC9B_43DC_A29B_CD61A13FBEF3
 
+#include <algorithm>
+#include <initializer_list>
 #include <cmath>
 
 namespace phase3d
@@ -22,94 +24,99 @@ namespace phase3d
 
       vector_3d( scalar x = 0 , scalar y = 0 , scalar z = 0 )
       {
-	data_[0] = x;
-	data_[1] = y;
-	data_[2] = z;
+        data_[0] = x;
+        data_[1] = y;
+        data_[2] = z;
+      }
+
+      vector_3d( std::initializer_list<scalar> args )
+      {
+        std::copy( args.begin() , args.end() , data_ );
       }
 
       scalar length() const
       {
-	return std::sqrt(length_squared());
+        return std::sqrt(length_squared());
       }
 
       scalar x() const
       {
-	return data_[0];
+        return data_[0];
       }
 
       scalar y() const
       {
-	return data_[1];
+        return data_[1];
       }
 
       scalar z() const
       {
-	return data_[2];
+        return data_[2];
       }
 
       this_type operator-() const
       {
-	return this_type(-data_[0],-data_[1],-data_[2]);
+        return this_type(-data_[0],-data_[1],-data_[2]);
       }
 
       bool operator==(this_type const& other) const
       {
-	return data_[0] == other.data_[0]
-	  && data_[1] == other.data_[1]
-	  && data_[2] == other.data_[2];
+        return data_[0] == other.data_[0]
+          && data_[1] == other.data_[1]
+          && data_[2] == other.data_[2];
       }
 
       bool operator!=(this_type const& other) const
       {
-	return !(operator==(other));
+        return !(operator==(other));
       }
 
 
       this_type operator*( scalar other ) const
       {
-	return this_type(data_[0]*other,data_[1]*other,data_[2]*other);
+        return this_type(data_[0]*other,data_[1]*other,data_[2]*other);
       }
 
       this_type operator/( scalar other ) const
       {
-	return this_type(data_[0]/other,data_[1]/other,data_[2]/other);
+        return this_type(data_[0]/other,data_[1]/other,data_[2]/other);
       }
 
       template< typename OTHER_SCALAR >
       this_type operator+(vector_3d<OTHER_SCALAR> const& other ) const
       {
-	return this_type(data_[0] + other.data_[0], data_[1] + other.data_[1],data_[2]+other.data_[2]);
+        return this_type(data_[0] + other.data_[0], data_[1] + other.data_[1],data_[2]+other.data_[2]);
       }
 
       template< typename OTHER_SCALAR >
       this_type operator-(vector_3d<OTHER_SCALAR> const& other ) const
       {
-	return this_type(data_[0] - other.data_[0], data_[1] - other.data_[1],data_[2]-other.data_[2]);
+        return this_type(data_[0] - other.data_[0], data_[1] - other.data_[1],data_[2]-other.data_[2]);
       }
 
       template< typename OTHER_SCALAR >
       scalar dot_product(vector_3d<OTHER_SCALAR> const& other ) const
       {
-	return data_[0]*other.data_[0] + data_[1] * other.data_[1] + data_[2]*other.data_[2];
+        return data_[0]*other.data_[0] + data_[1] * other.data_[1] + data_[2]*other.data_[2];
       }
 
       template< typename OTHER_SCALAR >
       this_type cross_product(vector_3d<OTHER_SCALAR> const& other ) const
       {
-	return this_type( data_[1]*other.data_[2] - data_[2]*other.data_[1],
-			  data_[2]*other.data_[0] - data_[0]*other.data_[2],
-			  data_[0]*other.data_[1] - data_[1]*other.data_[0] );
+        return this_type( data_[1]*other.data_[2] - data_[2]*other.data_[1],
+                          data_[2]*other.data_[0] - data_[0]*other.data_[2],
+                          data_[0]*other.data_[1] - data_[1]*other.data_[0] );
       }
 
       this_type normalize() const
       {
-	return *this / length();
+        return *this / length();
       }
 
     private:
       scalar length_squared() const
       {
-	return data_[0]*data_[0] + data_[1]*data_[1] + data_[2]*data_[2];
+        return data_[0]*data_[0] + data_[1]*data_[1] + data_[2]*data_[2];
       }
     };
 
@@ -137,4 +144,3 @@ namespace phase3d
 }
 
 #endif
-
