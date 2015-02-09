@@ -26,7 +26,7 @@ namespace phase3d
       typedef VALUE_TYPE value_type;
       typedef basic_write_channel<value_type> this_type;
 
-      virtual ~basic_write__channel() { }
+      virtual ~basic_write_channel() { }
 
       virtual this_type& at( long x , long y , value_type const& value ) = 0;
     };
