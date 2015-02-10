@@ -14,20 +14,19 @@ namespace phase3d
     public:
       typedef SCALAR scalar;
       typedef ray_3d<scalar> this_type;
-      typedef vector_3d< scalar > v3d;
-
+      typedef typename phase3d::model::vector_3d< scalar > vector_3d;
       
-      v3d origin_;
-      v3d direction_;
+      vector_3d origin_;
+      vector_3d direction_;
 
       ray_3d() { }
 
-      ray_3d(v3d origin, v3d direction)
+      ray_3d(vector_3d origin, vector_3d direction)
 	: origin_(origin)
 	, direction_(direction)
       { }
 
-      v3d point_at_parameter( scalar t )
+      vector_3d point_at_parameter( scalar t )
       {
 	return origin_ + t * direction_;
       }

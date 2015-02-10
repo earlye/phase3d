@@ -1,23 +1,37 @@
-#include <iostream>
-
-#include <boost/program_options.hpp>
 #include <model/ppm_write_channel.hpp>
+#include <model/basic_write_channel.hpp>
 #include <model/ray_3d.hpp>
 #include <model/surface.hpp>
+
+#include <boost/format.hpp>
+#include <boost/program_options.hpp>
+
+#include <iostream>
 
 namespace po = boost::program_options;
 typedef double scalar;
 
+template< typename SCALAR >
 class sphere
-  : public phase3d::model::surface<scalar>
+  : public phase3d::model::surface<SCALAR>
 {
 public:
-  scalar intersect( ray_3d const& r )
+  typedef SCALAR scalar;
+  typedef phase3d::model::surface<SCALAR> base_type;
+  typedef typename base_type::intersection intersection;
+  typedef typename base_type::ray_3d ray_3d;
+  typedef typename base_type::interval interval;
+  typedef typename base_type::vector_2d vector_2d;
+  
+  boost::shared_ptr<intersection> get_intersection( ray_3d const& ray , interval const& range )
   {
+    boost::shared_ptr<intersection> result;
     //    std::clog << r.direction_.x() << std::endl;
-    if (r.direction_.y() >= 0.0)
-      return 1;
-    return -1;
+    if (ray.direction_.y() >= 0.0)
+      {
+        result.reset( new intersection( scalar(1), ray, ray_3d(), vector_2d() ) );
+      }
+    return result;
   }
 };
 
@@ -28,11 +42,14 @@ public:
   typedef SCALAR scalar;
   typedef camera<scalar> this_type;
   virtual ~camera() { }
-  virtual void render_image( phase3d::model::output_write_channel<scalar>& destination ) = 0;
+  virtual void render_image( phase3d::model::basic_write_channel<scalar>& destination ) = 0;
 };
 
 int main(int argc,char**argv)
 {
+  typedef phase3d::model::intersection<scalar> intersection;
+  typedef phase3d::model::interval<scalar> interval;
+  
   std::string model;
   std::string output;
   long width;
@@ -57,12 +74,15 @@ int main(int argc,char**argv)
   std::cout << "Phase 3d" << std::endl;
   std::cout << "Input file:" << model << std::endl;
   std::cout << "Output file:" << output << std::endl;
+  std::cout << boost::format("width x height: %d x %d\n") % width % height;
+  assert( width );
+  assert( height );
 
   phase3d::model::ppm_write_channel<scalar> output_buffer(output);
   output_buffer.set_width( width )
     .set_height( height );
 
-  boost::shared_ptr< phase3d::model::surface<scalar> > surf(new stupid_surface);
+  boost::shared_ptr< phase3d::model::surface<scalar> > surf(new sphere<scalar>);
 
   for ( scalar u = 0; u < 1.0 ; u += 1.0 / (scalar)width )
     {
@@ -75,8 +95,8 @@ int main(int argc,char**argv)
 
           if ( surf )
             {
-              scalar distance = surf->intersect( ray );
-              if ( distance >= 0 ) {
+              boost::shared_ptr< intersection > intersect = surf->get_intersection( ray , interval() );
+              if ( intersect ) {
                 color = phase3d::model::rgb<scalar>( u , v , 1 );
               }
             }

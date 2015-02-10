@@ -4,9 +4,12 @@
 #include "basic_write_channel.hpp"
 #include "rgb.hpp"
 
+#include <boost/format.hpp>
+
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 namespace phase3d
 {
@@ -18,6 +21,8 @@ namespace phase3d
     {
     public:
       typedef SCALAR scalar;
+      typedef rgb<SCALAR> value_type;
+      typedef basic_write_channel< rgb<SCALAR> > base_type;
       typedef ppm_write_channel< scalar > this_type; 
       
       ppm_write_channel( std::string const& filename )

@@ -16,7 +16,7 @@ namespace phase3d
 
       scalar data[2] = {0,0};
 
-      vector_2d( scalar x , scalar y )
+      vector_2d( scalar x = 0 , scalar y = 0 )
       {
 	data[0] = x;
 	data[1] = y;
