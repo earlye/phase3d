@@ -12,10 +12,14 @@ namespace phase3d
 {
   namespace model
   {
+    template< typename SCALAR >
     class ppm_write_channel
-      : public basic_write_channel< rgb<double> >
+      : public basic_write_channel< rgb<SCALAR> >
     {
     public:
+      typedef SCALAR scalar;
+      typedef ppm_write_channel< scalar > this_type; 
+      
       ppm_write_channel( std::string const& filename )
         : width_(0)
         , height_(0)

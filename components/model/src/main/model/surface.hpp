@@ -15,7 +15,8 @@ namespace phase3d
       typedef surface<scalar> this_type;
       typedef typename phase3d::model::ray_3d<scalar> ray_3d;
 
-      virtual scalar intersect( ray_3d const& ray ) = 0;
+      // Check if "ray" intersects "this" where range.low() <= t < range.high().
+      virtual boost::shared_ptr<intersection> get_intersection( ray_3d const& ray, interval<scalar> float range ) = 0;
     };
   }
 }

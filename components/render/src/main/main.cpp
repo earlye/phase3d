@@ -6,9 +6,10 @@
 #include <model/surface.hpp>
 
 namespace po = boost::program_options;
+typedef double scalar;
 
-class stupid_surface
-  : public phase3d::model::surface<double>
+class sphere
+  : public phase3d::model::surface<scalar>
 {
 public:
   scalar intersect( ray_3d const& r )
@@ -18,6 +19,16 @@ public:
       return 1;
     return -1;
   }
+};
+
+template< typename SCALAR >
+class camera
+{
+public:
+  typedef SCALAR scalar;
+  typedef camera<scalar> this_type;
+  virtual ~camera() { }
+  virtual void render_image( phase3d::model::output_write_channel<scalar>& destination ) = 0;
 };
 
 int main(int argc,char**argv)
@@ -47,26 +58,26 @@ int main(int argc,char**argv)
   std::cout << "Input file:" << model << std::endl;
   std::cout << "Output file:" << output << std::endl;
 
-  phase3d::model::ppm_write_channel output_buffer(output);
+  phase3d::model::ppm_write_channel<scalar> output_buffer(output);
   output_buffer.set_width( width )
     .set_height( height );
 
-  boost::shared_ptr< phase3d::model::surface<double> > surf(new stupid_surface);
+  boost::shared_ptr< phase3d::model::surface<scalar> > surf(new stupid_surface);
 
-  for ( double u = 0; u < 1.0 ; u += 1.0 / (double)width )
+  for ( scalar u = 0; u < 1.0 ; u += 1.0 / (scalar)width )
     {
-      for ( double v = 0 ; v < 1.0 ; v += 1.0 / (double)height )
+      for ( scalar v = 0 ; v < 1.0 ; v += 1.0 / (scalar)height )
         {
-          phase3d::model::rgb<double> color( u , v , 0 );
+          phase3d::model::rgb<scalar> color( u , v , 0 );
           
-          phase3d::model::ray_3d<double> ray( phase3d::model::vector_3d<double>( 0.5 , 0.5 , -1.0 ),
-                                              phase3d::model::vector_3d<double>( 0.5 - u , 0.5 - v , 1.0 ) );
+          phase3d::model::ray_3d<scalar> ray( phase3d::model::vector_3d<scalar>( 0.5 , 0.5 , -1.0 ),
+                                              phase3d::model::vector_3d<scalar>( 0.5 - u , 0.5 - v , 1.0 ) );
 
           if ( surf )
             {
-              double distance = surf->intersect( ray );
+              scalar distance = surf->intersect( ray );
               if ( distance >= 0 ) {
-                color = phase3d::model::rgb<double>( u , v , 1 );
+                color = phase3d::model::rgb<scalar>( u , v , 1 );
               }
             }
 
