@@ -26,7 +26,7 @@ namespace phase3d
 	, direction_(direction)
       { }
 
-      vector_3d point_at_parameter( scalar t )
+      vector_3d point_at_parameter( scalar t ) const
       {
 	return origin_ + t * direction_;
       }

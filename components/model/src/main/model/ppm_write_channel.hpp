@@ -48,6 +48,14 @@ namespace phase3d
               of << "\n";              
           }
       }
+
+      long get_height() const {
+        return height_;
+      }
+
+      long get_width() const {
+        return width_;
+      }
       
       ppm_write_channel& set_width( long width ) {
         width_ = width;

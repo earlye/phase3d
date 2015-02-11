@@ -23,7 +23,7 @@ namespace phase3d
       typedef typename phase3d::model::interval<scalar> interval;
 
       // Check if "ray" intersects "this" where range.low() <= t < range.high().
-      virtual boost::shared_ptr<intersection> get_intersection( ray_3d const& ray, interval const& range ) = 0;
+      virtual boost::shared_ptr<intersection> get_intersection( ray_3d const& ray, interval const& range ) const = 0;
     };
   }
 }
