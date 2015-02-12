@@ -1,6 +1,8 @@
 #ifndef h199A1ED3_8E95_435B_9976_AD9F400159F1
 #define h199A1ED3_8E95_435B_9976_AD9F400159F1
 
+#include "ray_3d.hpp"
+#include "rgb.hpp"
 #include "vector_3d.hpp"
 #include "vector_2d.hpp"
 
@@ -8,7 +10,6 @@ namespace phase3d
 {
   namespace model
   {
-    
     template< typename SCALAR >
     class intersection
     {
