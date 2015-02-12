@@ -13,6 +13,128 @@ namespace po = boost::program_options;
 typedef double scalar;
 
 template< typename SCALAR >
+class triangle
+  : public phase3d::model::surface<SCALAR>
+{
+public:
+  typedef SCALAR scalar;
+  typedef phase3d::model::surface<SCALAR> base_type;
+  typedef typename base_type::intersection intersection;
+  typedef typename base_type::ray_3d ray_3d;
+  typedef typename base_type::interval interval;
+  typedef typename base_type::vector_2d vector_2d;
+  typedef typename phase3d::model::vector_3d<scalar> vector_3d;
+  typedef typename phase3d::model::rgb<scalar> rgb;
+
+public:
+
+  triangle( vector_3d p0 , vector_3d p1, vector_3d p2 )
+    : p0_(p0)
+    , p1_(p1)
+    , p2_(p2)
+  { }
+
+  boost::shared_ptr<intersection> get_intersection( ray_3d const& ray , interval const& range ) const
+  {
+    scalar A = p0_.x() - p1_.x();
+    scalar B = p0_.y() - p1_.y();
+    scalar C = p0_.z() - p1_.z();
+
+    scalar D = p0_.x() - p2_.x();
+    scalar E = p0_.y() - p2_.y();
+    scalar F = p0_.z() - p2_.z();
+
+    scalar G = ray.direction_.x();
+    scalar H = ray.direction_.y();
+    scalar I = ray.direction_.z();
+
+    scalar J = p0_.x() - ray.origin_.x();
+    scalar K = p0_.y() - ray.origin_.y();
+    scalar L = p0_.z() - ray.origin_.z();
+
+    scalar EIHF = E*I - H*F;
+    scalar GFDI = G*F - D*I;
+    scalar DHEG = D*H - E*G;
+
+    scalar denom = A*EIHF + B*GFDI + C*DHEG;
+    scalar beta = (J*EIHF + K*GFDI + L*DHEG) / denom;
+
+    if (beta <= scalar(0) || beta >= scalar(1))
+      {
+        return boost::shared_ptr<intersection>();
+      }
+
+    scalar AKJB = A*K - J*B;
+    scalar JCAL = J*K - A*L;
+    scalar BLKC = B*L - K*C;
+
+    scalar gamma = (I*AKJB + H*JCAL + G*BLKC) / denom;
+
+    if (gamma <= scalar(0) || (beta+gamma) >= scalar(1))
+      return boost::shared_ptr<intersection>();
+
+    scalar t = -(F*AKJB + E*JCAL + D*BLKC) / denom;
+    if (!range.contains(t))
+      {
+        return boost::shared_ptr<intersection>();
+      }
+
+
+    vector_3d p = ray.point_at_parameter(t);
+    vector_3d n = p0_.cross_product(p1_);
+    ray_3d normal_ray(p,n);
+    vector_2d uv;
+
+    return boost::shared_ptr<intersection>(new intersection(t, ray, normal_ray , uv , rgb(t/2000.0,0,0) ));
+  }
+
+private:
+  vector_3d p0_;
+  vector_3d p1_;
+  vector_3d p2_;
+};
+
+template< typename SCALAR >
+class group
+  : public phase3d::model::surface<SCALAR>
+{
+public:
+  typedef SCALAR scalar;
+  typedef phase3d::model::surface<scalar> base_type;
+  typedef base_type surface_type;
+  typedef typename base_type::intersection intersection;
+  typedef typename base_type::interval interval;
+  typedef typename base_type::ray_3d ray_3d;
+
+  group& push_back( boost::shared_ptr< surface_type > surface )
+  {
+    surfaces_.push_back(surface);
+    return *this;
+  }
+
+  boost::shared_ptr<intersection> get_intersection( ray_3d const& ray , interval const& original_range ) const
+  {
+    boost::shared_ptr<intersection> result;
+    interval range(original_range);
+
+    for( int i = 0; i < surfaces_.size() ; ++i )
+      {
+        boost::shared_ptr<intersection> check = surfaces_[i]->get_intersection( ray, range );
+        if ( check.get() )
+          {
+            range = interval(range.low(), check->t_ );
+            result = check;
+          }
+      }
+    return result;
+  }
+
+private:
+  std::vector< boost::shared_ptr< surface_type > > surfaces_;
+};
+
+
+template< typename SCALAR >
 class sphere
   : public phase3d::model::surface<SCALAR>
 {
@@ -24,6 +146,7 @@ public:
   typedef typename base_type::interval interval;
   typedef typename base_type::vector_2d vector_2d;
   typedef typename phase3d::model::vector_3d<scalar> vector_3d;
+  typedef typename phase3d::model::rgb<scalar> rgb;
 
   sphere()
     : center_(0,0,0)
@@ -46,7 +169,7 @@ public:
     this->radius_ = radius;
     return *this;
   }
-  
+
   boost::shared_ptr<intersection> get_intersection( ray_3d const& ray , interval const& range ) const
   {
     boost::shared_ptr<intersection> result;
@@ -63,21 +186,20 @@ public:
       return result;
 
     scalar sqrt_discriminant = sqrt(discriminant);
-    
-    if ( discriminant == scalar(0) )
-      {
-        scalar t = (-b + sqrt_discriminant ) / (scalar(2)*a);
-        if ( !range.contains(t) )
-          return result;
 
-        vector_3d p( ray.point_at_parameter(t) );
-        vector_3d n = scalar(2) * (p - center_);
+    scalar t = (-b - sqrt_discriminant ) / (scalar(2)*a);
+    if (t < range.low() )
+      t = ( -b + sqrt_discriminant ) / (scalar(2)*a);
 
-        result.reset( new intersection( scalar(t), ray, ray_3d(p,n) , vector_2d() ) );
-        return result;
-      }
+    if ( !range.contains(t) )
+      return result;
 
-    result.reset( new intersection( scalar(1), ray, ray_3d(), vector_2d() ) );
+    vector_3d p( ray.point_at_parameter(t) );
+    vector_3d n = scalar(2) * (p - center_);
+    ray_3d normal_ray(p,n);
+    vector_2d uv;
+
+    result.reset( new intersection( t, ray, normal_ray , uv , rgb(0,0,t/2000.0)  ) );
     return result;
   }
 
@@ -121,15 +243,16 @@ public:
       {
         for ( int x = horizontal_range.low(); x < horizontal_range.high() ; ++x )
           {
-            ray_3d ray( vector_3d( x + 0.5 , y + 0.5 , 0 ),
+            ray_3d ray( vector_3d( x , y , 0 ),
                         vector_3d( 0 , 0 , -1.0 ) );
 
-            boost::shared_ptr< intersection > intersect = source_surface.get_intersection( ray , interval() );
+            boost::shared_ptr< intersection > intersect = source_surface.get_intersection(
+              ray , interval(0,std::numeric_limits<scalar>::max()) );
 
             rgb color;
-            
+
             if ( intersect.get() )
-              color = phase3d::model::rgb<scalar>( 0.5 , 0.5 , 0.5 );
+              color = intersect->color_;
             else
               color = phase3d::model::rgb<scalar>(0,0,0);
 
@@ -177,13 +300,24 @@ int main(int argc,char**argv)
   output_buffer.set_width( width )
     .set_height( height );
 
-  boost::shared_ptr< phase3d::model::surface<scalar> > surf(new sphere<scalar>( phase3d::model::vector_3d<scalar>(250,250,-1000) , 150 ) );
+
+  boost::shared_ptr< group<scalar> > scene(new group<scalar>());
+
+  scene->push_back(boost::shared_ptr< phase3d::model::surface<scalar> >(
+    new sphere<scalar>(
+      phase3d::model::vector_3d<scalar>(250,250,-1000) , 150 ) ));
+
+  scene->push_back(boost::shared_ptr< phase3d::model::surface<scalar> >(
+    new triangle<scalar>( phase3d::model::vector_3d<scalar>(300,600,-800),
+                          phase3d::model::vector_3d<scalar>(0,100,-1000),
+                          phase3d::model::vector_3d<scalar>(450,20,-1000) )));
+
   boost::shared_ptr< camera<scalar> > camera( new orthographic_camera<scalar> );
 
   camera->render_tile( output_buffer,
                        phase3d::model::interval<scalar>(0, output_buffer.get_width()),
                        phase3d::model::interval<scalar>(0, output_buffer.get_height()),
-                       *surf );
+                       *scene );
 
 
 }

@@ -15,18 +15,21 @@ namespace phase3d
     public:
       typedef SCALAR scalar;
       typedef typename phase3d::model::ray_3d<scalar> ray_3d;
+      typedef typename phase3d::model::rgb<scalar> rgb;
       typedef typename phase3d::model::vector_2d<scalar> vector_2d;
 
       scalar t_;
       ray_3d incident_ray_;
       ray_3d normal_;
       vector_2d uv_;
+      rgb color_;
 
-      intersection( scalar t , ray_3d incident_ray, ray_3d normal, vector_2d uv )
+      intersection( scalar t , ray_3d incident_ray, ray_3d normal, vector_2d uv , rgb color)
         : t_(t)
         , incident_ray_(incident_ray)
         , normal_(normal)
         , uv_(uv)
+        , color_(color)
       { }
     };
     

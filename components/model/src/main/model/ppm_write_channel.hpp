@@ -70,7 +70,7 @@ namespace phase3d
       }
 
       ppm_write_channel& at( long x, long y , value_type const& value ) {
-        long index = y * width_ + x;
+        long index = (height_ - y - 1) * width_ + x;
         assert( index < pixels_.size() );
         pixels_[index] = value;
       }
